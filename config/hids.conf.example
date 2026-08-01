@@ -1,0 +1,26 @@
+# /etc/hids/hids.conf -- HIDS service configuration
+
+# Model + windowing
+model_path = /etc/hids/model.bin
+window_sec = 30
+
+# Identity (defaults to the system hostname if unset)
+# host = rpi3-sensor-01
+
+# MQTT / Mosquitto broker on the remote server
+mqtt_host = 192.0.2.10
+mqtt_port = 1883
+# mqtt_client_id = hids-rpi3-sensor-01   # defaults to hids-<host>
+# mqtt_username = sensor
+# mqtt_password = changeme
+mqtt_keepalive = 60
+mqtt_topic_prefix = hids
+# -> publishes to  hids/<host>/events  and  hids/<host>/alerts
+
+# Publish policy
+publish_every_window = true    # false = publish only confirmed alerts
+include_features = true         # attach the normalized 31-vector to each event
+
+# Debounce / alerting
+min_confidence = 0.60
+alert_streak = 2                # consecutive confident windows to confirm an alert

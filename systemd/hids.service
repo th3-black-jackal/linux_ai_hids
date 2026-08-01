@@ -1,0 +1,27 @@
+[Unit]
+Description=ML Host-based Intrusion Detection Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/hids --config /etc/hids/hids.conf
+Restart=on-failure
+RestartSec=5
+
+# perf_event_open (tracepoints) and reading system-wide counters need privilege.
+# Prefer capabilities over full root where the kernel allows it.
+User=root
+AmbientCapabilities=CAP_PERFMON CAP_SYS_ADMIN
+# On older kernels without CAP_PERFMON, ensure perf is reachable:
+#   sysctl kernel.perf_event_paranoid=-1
+
+# Sandbox what we can without breaking /proc, tracefs, and perf access.
+NoNewPrivileges=true
+ProtectHome=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+MemoryMax=128M
+
+[Install]
+WantedBy=multi-user.target
