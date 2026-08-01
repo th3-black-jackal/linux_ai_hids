@@ -43,17 +43,6 @@ No Wazuh integration and no desktop app in this build (telemetry is MQTT-only).
     tools/                         make_ref_model.py, bin_oracle.py (NumPy reference)
     scripts/                       tier1-qemu-user.sh, run-qemu-armhf.sh
 
-### Validation status
-
-- Inference path (model.hpp + replay): validated on x86, on armhf under
-  qemu-user, and against an independent NumPy oracle.
-- Service pipeline: builds on x86 and cross-builds to armhf; MQTT publish of
-  events + alerts verified end-to-end against a live Mosquitto broker.
-- NOT yet validated: live tracepoint resolution and, above all, FEATURE PARITY
-  (that the live 31-vector matches the training distribution). Must be checked
-  on the real armhf target / Tier-2 qemu-system. `seconds_RES_data` is a
-  best-guess whose training semantics are unconfirmed.
-
 ## Build
 
     cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j
