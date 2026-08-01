@@ -92,3 +92,21 @@ Tier 2 (armhf under qemu-system) — the only place collectors are meaningful:
 boot a 32-bit ARM guest (scripts/run-qemu-armhf.sh), then on the guest run
 `hids --check` to confirm the 31 tracepoints resolve, and `--dump-features` to
 overlay live vectors on the training distribution before trusting detections.
+
+##How to run on RapsberryPI board
+I have created a custom RapsberrPI 3B+ Image using Buildroot with mosquitto_clients, vim and any other tools u want (you won't need much more for running the service)
+On the host and after the compiling execute the following commands in order
+```
+sudo losetup -Pf --show sdcard.img              # prints /dev/loopN
+sudo mount /dev/loopNp1 /mnt/boot               # FAT boot partition
+cp /mnt/boot/bcm2837-rpi-3-b-plus.dtb ./pi3.dtb # keep for the boot command
+sudo umount /mnt/boot
+
+sudo mount /dev/loopNp2 /mnt/root               # ext4 rootfs
+sudo cp hids-armhf-static /mnt/root/usr/local/bin/hids
+sudo mkdir -p /mnt/root/etc/hids
+sudo cp your-model.bin /mnt/root/etc/hids/model.bin
+sudo cp hids.conf /mnt/root/etc/hids/hids.conf  # set mqtt_host = <broker IP>, not hostname
+sudo umount /mnt/root
+sudo losetup -d /dev/loopN
+```
